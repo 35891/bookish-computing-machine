@@ -3,32 +3,25 @@
      <head>
         <title>Login Disini Beb</title>
         <style>
-            label{ 
+            label{
                 display: block;
             }
-        </style>    
+        </style>
     </head>
     <?php require 'Connection.php';?>
     <body>
         <?php
-            function validate_input($data){
-                $data = trim($data);
-                $data = stripslashes($data);
-                $data = htmlspecialchars($data);
-                return $data;
-            }
-
+            require 'Creditentials.php';
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $username = validate_input($_POST["username"]);
-                $password = validate_input($_POST["password"]);
-                $password2 = validate_input($_POST["password2"]);
+                $username = mysqli_real_escape_string($mysqli, $_POST["username"]);
+                $password = mysqli_real_escape_string($mysqli, $_POST["password"]);
+                $password2 = mysqli_real_escape_string($mysqli, $_POST["password2"]);
             }
             $bool = isset($_POST['form_submitted']) &&
                     !empty($_POST["username"]) && strlen($username) <= 30 &&
                     !empty($_POST["password"]) && strlen($password) <= 30 &&
                     strcmp($_POST["password"], $_POST["password2"]) == 0;
             if ($bool):
-                require 'Creditentials.php';
                     $sql = "
                         INSERT INTO
                         users(username, password, isAdmin)
@@ -39,7 +32,7 @@
                     }
                 mysqli_close($mysqli);
         ?>
-            <h2>Thank You <?php validate_input($_POST["username"]);?></h2>
+            <h2>Thank You <?php $_POST["username"]?></h2>
 
             <p>Go <a href="">back</a> to the form</p>
         <?php else: ?>
@@ -50,7 +43,7 @@
                         <label for="username">username :</label>
                         <input type="text" name="username" id="username"/>
                     </li>
-                
+
                     <li>
                         <label for="password">password :</label>
                         <input type="Password" name="password" id="password"/>
@@ -67,6 +60,6 @@
                     <input type="hidden" name="form_submitted" value="1"/>
                 </ul>
             </form>
-      <?php endif; ?> 
+      <?php endif; ?>
     </body>
-</html> 
+</html>
